@@ -2,7 +2,7 @@
 
 **Growth, Prices and the External Gap** — a four-page Power BI case study built on official World Bank and Central Bank of Jordan (CBJ) data, 1990–2025.
 
-![Executive Pulse page](assets/screenshots/01-executive-pulse.jpg)
+![Executive Pulse page](assets/screenshots/page-1-executive-pulse.jpg)
 
 ## The business question
 
@@ -22,11 +22,11 @@ The merchandise deficit is **not** presented as an accounting identity equal to 
 | **Trade Structure** | What Jordan imports and sells abroad, and to whom: commodity and partner mix (CBJ), domestic export coverage of imports, definitions and sources. |
 
 <p>
-<img src="assets/screenshots/02-growth-and-prices.jpg" width="49%" alt="Growth and Prices page">
-<img src="assets/screenshots/03-external-position.jpg" width="49%" alt="External Position page">
+<img src="assets/screenshots/page-2-growth-and-prices.jpg" width="49%" alt="Growth and Prices page">
+<img src="assets/screenshots/page-3-external-position.jpg" width="49%" alt="External Position page">
 </p>
 <p>
-<img src="assets/screenshots/04-trade-structure.jpg" width="49%" alt="Trade Structure page">
+<img src="assets/screenshots/page-4-trade-structure.jpg" width="49%" alt="Trade Structure page">
 </p>
 
 Interactions: a **reference-year slicer** in the left rail (synced across pages) drives every KPI and caption, while the time-series charts always show the full history; page navigation from the rail; and a **hover tooltip** on the Executive hero chart that shows imports, exports, gap, export coverage, current account, remittances and reserves for the hovered year.
