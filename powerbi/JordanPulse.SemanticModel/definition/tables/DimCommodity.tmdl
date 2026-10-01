@@ -1,0 +1,36 @@
+/// CBJ commodity groups (SITC-based). 10 groups; mutually exclusive and sum to the CBJ grand total.
+table DimCommodity
+	lineageTag: 95a92931-129c-4500-8914-d3ef53815fb4
+
+	column CommodityKey
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 066f3acb-105d-453e-8ebd-2aabd5945ea2
+		summarizeBy: none
+		sourceColumn: CommodityKey
+
+	column Commodity
+		dataType: string
+		lineageTag: 9948468d-effb-494b-9da2-4a60d0e8b100
+		summarizeBy: none
+		sourceColumn: Commodity
+		sortByColumn: SortOrder
+
+	column SortOrder
+		dataType: int64
+		isHidden
+		lineageTag: 694920d4-de98-4665-a303-a29a1a9d78d1
+		summarizeBy: none
+		sourceColumn: SortOrder
+
+	partition DimCommodity = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents(DataFolder & "DimCommodity.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"CommodityKey", Int64.Type}, {"Commodity", type text}, {"SortOrder", Int64.Type}}, "en-US")
+				in
+				  Typed
+

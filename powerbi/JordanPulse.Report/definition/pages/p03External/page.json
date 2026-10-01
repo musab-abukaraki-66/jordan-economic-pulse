@@ -1,0 +1,114 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "p03External",
+  "displayName": "External Position",
+  "displayOption": "FitToPage",
+  "width": 1440,
+  "height": 900,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'bg_canvas.png'"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Fill'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "bg_canvas.png"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#EDF1F3'"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "yearSlicer",
+      "target": "kpiSpark0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "yearSlicer",
+      "target": "kpiSpark1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "yearSlicer",
+      "target": "kpiSpark2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "yearSlicer",
+      "target": "kpiSpark3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "yearSlicer",
+      "target": "heroChart",
+      "type": "NoFilter"
+    },
+    {
+      "source": "yearSlicer",
+      "target": "sideChart",
+      "type": "NoFilter"
+    },
+    {
+      "source": "yearSlicer",
+      "target": "botRem",
+      "type": "NoFilter"
+    },
+    {
+      "source": "yearSlicer",
+      "target": "botFdi",
+      "type": "NoFilter"
+    },
+    {
+      "source": "yearSlicer",
+      "target": "botRes",
+      "type": "NoFilter"
+    }
+  ]
+}

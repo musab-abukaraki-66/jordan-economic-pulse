@@ -1,0 +1,137 @@
+/// Grain: one row per year (Jordan, World Bank WDI). Wide by design: each column is a distinct annual series. Values are in USD unless suffixed Pct. Stocks (GDP level, population, reserves) and rates must never be summed across years.
+table FactEconomy
+	lineageTag: 7ce3c8cb-f297-43e6-949b-4732ede1add2
+
+	column Year
+		dataType: int64
+		isHidden
+		lineageTag: 8b9a2baa-2ff4-460d-9a0a-9446967ea0f3
+		summarizeBy: none
+		sourceColumn: Year
+
+	/// WB NY.GDP.MKTP.CD. Snapshot/annual level, current US$.
+	column GDP_USD
+		dataType: double
+		isHidden
+		lineageTag: 16fdbdb4-6ddd-418e-84e3-0fede03c4f2d
+		summarizeBy: none
+		sourceColumn: GDP_USD
+
+	/// WB NY.GDP.MKTP.KD.ZG. Annual % (rate; non-additive).
+	column GDP_Growth_Pct
+		dataType: double
+		isHidden
+		lineageTag: a8153c78-13b9-4ca4-9913-05803ff27a7b
+		summarizeBy: none
+		sourceColumn: GDP_Growth_Pct
+
+	/// WB NY.GDP.PCAP.CD. Current US$ (non-additive).
+	column GDP_PerCapita_USD
+		dataType: double
+		isHidden
+		lineageTag: c0214b58-e3df-4a76-ae39-7687011db795
+		summarizeBy: none
+		sourceColumn: GDP_PerCapita_USD
+
+	/// WB FP.CPI.TOTL.ZG. Annual % (rate; non-additive).
+	column Inflation_Pct
+		dataType: double
+		isHidden
+		lineageTag: c1acee79-52b4-4342-90c4-b737e8e85162
+		summarizeBy: none
+		sourceColumn: Inflation_Pct
+
+	/// WB SL.UEM.TOTL.ZS (ILO modelled). % (rate; non-additive). Series starts 1991.
+	column Unemployment_Pct
+		dataType: double
+		isHidden
+		lineageTag: 0f39bd51-f261-4b1e-b7a5-a966235bb60e
+		summarizeBy: none
+		sourceColumn: Unemployment_Pct
+
+	/// WB SP.POP.TOTL. Snapshot.
+	column Population
+		dataType: double
+		isHidden
+		lineageTag: 90c2a9b7-8f5e-4088-9fe0-b93ffcf26c6a
+		summarizeBy: none
+		sourceColumn: Population
+
+	/// WB TX.VAL.MRCH.CD.WT. TOTAL merchandise exports incl. re-exports. Additive over time.
+	column MerchExports_USD
+		dataType: double
+		isHidden
+		lineageTag: 4b347883-2dc6-4c72-8fb8-5252c3e8cb83
+		summarizeBy: none
+		sourceColumn: MerchExports_USD
+
+	/// WB TM.VAL.MRCH.CD.WT. Additive over time.
+	column MerchImports_USD
+		dataType: double
+		isHidden
+		lineageTag: b335cc6e-8edc-4955-bc66-31ca0bd20bfc
+		summarizeBy: none
+		sourceColumn: MerchImports_USD
+
+	/// WB BN.GSR.GNFS.CD. Balance of payments net trade in goods and services.
+	column NetGoodsServices_USD
+		dataType: double
+		isHidden
+		lineageTag: 594f1406-fef1-42d3-bb4c-7a9de92b92aa
+		summarizeBy: none
+		sourceColumn: NetGoodsServices_USD
+
+	/// WB BN.CAB.XOKA.CD. Balance; additive over time as a flow.
+	column CurrentAccount_USD
+		dataType: double
+		isHidden
+		lineageTag: 7e413fb9-97d4-404c-a165-a0c2d3f66a7b
+		summarizeBy: none
+		sourceColumn: CurrentAccount_USD
+
+	/// WB BN.CAB.XOKA.GD.ZS. Ratio (non-additive).
+	column CurrentAccount_PctGDP
+		dataType: double
+		isHidden
+		lineageTag: 9b7ba163-d1c4-44a9-a773-ca7993c7ae30
+		summarizeBy: none
+		sourceColumn: CurrentAccount_PctGDP
+
+	/// WB BX.TRF.PWKR.CD.DT. Personal remittances received; additive flow.
+	column Remittances_USD
+		dataType: double
+		isHidden
+		lineageTag: ed3535f1-a313-4d04-961b-696bb7528776
+		summarizeBy: none
+		sourceColumn: Remittances_USD
+
+	/// WB BX.KLT.DINV.CD.WD. FDI net inflows (BoP); additive flow; can be negative.
+	column FDI_USD
+		dataType: double
+		isHidden
+		lineageTag: ffa0cc3c-038f-4795-bba1-76c8e132030e
+		summarizeBy: none
+		sourceColumn: FDI_USD
+
+	/// WB FI.RES.TOTL.CD. Total reserves incl. gold; end-of-year snapshot.
+	column Reserves_USD
+		dataType: double
+		isHidden
+		lineageTag: 71748a94-27a1-4e0e-9eca-e27cba587cfb
+		summarizeBy: none
+		sourceColumn: Reserves_USD
+
+	partition FactEconomy = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents(DataFolder & "FactEconomy.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"Year", Int64.Type}, {"GDP_USD", type number}, {"GDP_Growth_Pct", type number}, {"GDP_PerCapita_USD", type number}, {"Inflation_Pct", type number}, {"Unemployment_Pct", type number}, {"Population", type number}, {"MerchExports_USD", type number}, {"MerchImports_USD", type number}, {"NetGoodsServices_USD", type number}, {"CurrentAccount_USD", type number}, {"CurrentAccount_PctGDP", type number}, {"Remittances_USD", type number}, {"FDI_USD", type number}, {"Reserves_USD", type number}}, "en-US")
+				in
+				  Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

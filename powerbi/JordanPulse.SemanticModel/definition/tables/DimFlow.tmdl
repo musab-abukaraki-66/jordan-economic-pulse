@@ -1,0 +1,29 @@
+/// Trade flow for CBJ tables. Exports are DOMESTIC exports (exclude re-exports).
+table DimFlow
+	lineageTag: 444b30d6-627b-4c93-b2e5-cdd1f1c9a6fd
+
+	column FlowKey
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: f3c47ff6-a067-48d8-a5c0-e067897573a0
+		summarizeBy: none
+		sourceColumn: FlowKey
+
+	column Flow
+		dataType: string
+		lineageTag: a3238e10-7d67-4b5f-b667-bfba90ef4718
+		summarizeBy: none
+		sourceColumn: Flow
+		sortByColumn: FlowKey
+
+	partition DimFlow = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents(DataFolder & "DimFlow.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"FlowKey", Int64.Type}, {"Flow", type text}}, "en-US")
+				in
+				  Typed
+

@@ -1,0 +1,141 @@
+WB long rows (peer set, incl. nulls): 28512
+WB non-null rows: 17392
+WB duplicate (country,indicator,year): 0
+
+=== exports_commodity: domestic_exports_by_commodity_according_to_s.i.t.c..xlsx
+ rows=59 years 1964..2022 distinct years=59 dup years=0 skipped_no_values=[]
+ missing years in range: []
+ total-vs-components: max|diff|=0.00, rows with diff>5 & >0.2%: 0
+ null cells per item: {'Other': 0, 'Misc. Manufactured Articles': 0, 'Machinery & Transport Equipment': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Animal & Vegetable Oils & Fats': 0, 'Mineral Fuels & Lubricants': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0}
+ zero cells per item: {'Other': 10, 'Misc. Manufactured Articles': 0, 'Machinery & Transport Equipment': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Animal & Vegetable Oils & Fats': 0, 'Mineral Fuels & Lubricants': 3, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0}
+ negative cells: {}
+ year footnote rows: [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+ GRAIN Year x Category -> long rows=590, duplicate keys=0
+
+=== imports_commodity: imports_by_commodity_according_to_s.i.t.c..xlsx
+ rows=58 years 1964..2022 distinct years=58 dup years=0 skipped_no_values=[]
+ missing years in range: [2012]
+ total-vs-components: max|diff|=0.00, rows with diff>5 & >0.2%: 0
+ null cells per item: {'Other': 0, 'Misc. Manufactured Articles': 0, 'Machinery & Transport Equipment': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Animal & Vegetable Oils & Fats': 0, 'Mineral Fuels & Lubricants': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0}
+ zero cells per item: {'Other': 0, 'Misc. Manufactured Articles': 0, 'Machinery & Transport Equipment': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Animal & Vegetable Oils & Fats': 0, 'Mineral Fuels & Lubricants': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0}
+ negative cells: {}
+ year footnote rows: [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+ GRAIN Year x Category -> long rows=580, duplicate keys=0
+
+=== exports_function: domestic_exports_by_economic_function.xlsx
+ rows=59 years 1964..2022 distinct years=59 dup years=0 skipped_no_values=[]
+ missing years in range: []
+ total-vs-components: max|diff|=1.30, rows with diff>5 & >0.2%: 0
+ null cells per item: {'Other Goods n.e.c.': 0, 'Capital Goods': 0, 'Crude & Intermediate - Other': 0, 'Construction Materials': 0, 'Durable Consumer Goods': 0, 'Current Consumer Goods': 0}
+ zero cells per item: {'Other Goods n.e.c.': 11, 'Capital Goods': 0, 'Crude & Intermediate - Other': 0, 'Construction Materials': 1, 'Durable Consumer Goods': 0, 'Current Consumer Goods': 0}
+ negative cells: {}
+ year footnote rows: [1990, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
+ GRAIN Year x Category -> long rows=354, duplicate keys=0
+
+=== imports_function: imports_by_economic_function.xlsx
+ rows=59 years 1964..2022 distinct years=59 dup years=0 skipped_no_values=[]
+ missing years in range: []
+ total-vs-components: max|diff|=3.00, rows with diff>5 & >0.2%: 0
+ null cells per item: {'Other Goods n.e.c.': 0, 'Capital - Other': 0, 'Capital - Other Machinery & Equipment': 0, 'Capital - Machinery & Transport Equipment': 0, 'Crude & Intermediate - Other': 0, 'Crude & Intermediate - Oil & Fuels': 0, 'Durable Consumer Goods': 0, 'Current Consumer Goods': 0}
+ zero cells per item: {'Other Goods n.e.c.': 0, 'Capital - Other': 0, 'Capital - Other Machinery & Equipment': 0, 'Capital - Machinery & Transport Equipment': 0, 'Crude & Intermediate - Other': 0, 'Crude & Intermediate - Oil & Fuels': 0, 'Durable Consumer Goods': 0, 'Current Consumer Goods': 0}
+ negative cells: {}
+ year footnote rows: [1990, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
+ GRAIN Year x Category -> long rows=472, duplicate keys=0
+
+=== exports_geo: geographic_distribution_of_exports.xlsx
+ rows=59 years 1964..2022 distinct years=59 dup years=0 skipped_no_values=[]
+ missing years in range: []
+ total-vs-components: max|diff|=1.00, rows with diff>5 & >0.2%: 0
+ null cells per item: {'Other Countries': 0, 'Japan': 0, 'India': 0, 'China': 0, 'U.S.A.': 0, 'Other European Countries': 0, 'European Union': 0, 'Arab Countries': 0}
+ zero cells per item: {'Other Countries': 0, 'Japan': 1, 'India': 0, 'China': 9, 'U.S.A.': 0, 'Other European Countries': 0, 'European Union': 0, 'Arab Countries': 0}
+ negative cells: {}
+ year footnote rows: [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+ GRAIN Year x Category -> long rows=472, duplicate keys=0
+
+=== imports_geo: geographic_distribution_of_imports.xlsx
+ rows=59 years 1964..2022 distinct years=59 dup years=0 skipped_no_values=[]
+ missing years in range: []
+ total-vs-components: max|diff|=2.00, rows with diff>5 & >0.2%: 0
+ null cells per item: {'Other Countries': 0, 'Japan': 0, 'India': 0, 'China': 0, 'U.S.A.': 0, 'Other European Countries': 0, 'European Union': 0, 'Arab Countries': 0}
+ zero cells per item: {'Other Countries': 0, 'Japan': 0, 'India': 0, 'China': 0, 'U.S.A.': 0, 'Other European Countries': 0, 'European Union': 0, 'Arab Countries': 0}
+ negative cells: {}
+ year footnote rows: [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+ GRAIN Year x Category -> long rows=472, duplicate keys=0
+
+=== imports_arab_commodity: imports_from_arab_countries_according_to_s.i.t.c..xlsx
+ rows=48 years 1975..2022 distinct years=48 dup years=0 skipped_no_values=[]
+ missing years in range: []
+ total-vs-components: max|diff|=1.00, rows with diff>5 & >0.2%: 0
+ null cells per item: {'Other': 0, 'Misc. Manufactured Articles': 0, 'Machinery & Transport Equipment': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Animal & Vegetable Oils & Fats': 0, 'Mineral Fuels & Lubricants': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0}
+ zero cells per item: {'Other': 7, 'Misc. Manufactured Articles': 0, 'Machinery & Transport Equipment': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Animal & Vegetable Oils & Fats': 0, 'Mineral Fuels & Lubricants': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0}
+ negative cells: {}
+ year footnote rows: [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+ GRAIN Year x Category -> long rows=480, duplicate keys=0
+
+=== idx_price_exports: index_of_unit_price_of_domestic_exports.xlsx
+ rows=54 years 1969..2022 dup years=0 skipped=[]
+ missing years: []
+ null cells: {'Misc. Manufactured Articles': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0, '__TOTAL__': 0}
+ value range: min=17.9 max=472.4
+ GRAIN Year x Category dup keys=0
+
+=== idx_volume_exports: index_of_unit_volume_of_domestic_exports.xlsx
+ rows=54 years 1969..2022 dup years=0 skipped=[]
+ missing years: []
+ null cells: {'Misc. Manufactured Articles': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0, '__TOTAL__': 0}
+ value range: min=2.0 max=3501.3
+ GRAIN Year x Category dup keys=0
+
+=== idx_price_imports: index_of_unit_price_of_imports_..xlsx
+ rows=54 years 1969..2022 dup years=0 skipped=[]
+ missing years: []
+ null cells: {'Misc. Manufactured Articles': 0, 'Machinery & Transport Equipment': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Animal & Vegetable Oils & Fats': 0, 'Mineral Fuels & Lubricants': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0, '__TOTAL__': 0}
+ value range: min=6.9 max=1431.6
+ GRAIN Year x Category dup keys=0
+
+=== idx_volume_imports: index_of_unit_volume_of_imports.xlsx
+ rows=54 years 1969..2022 dup years=0 skipped=[]
+ missing years: []
+ null cells: {'Misc. Manufactured Articles': 0, 'Machinery & Transport Equipment': 0, 'Manufactured Goods (by Material)': 0, 'Chemicals': 0, 'Animal & Vegetable Oils & Fats': 0, 'Mineral Fuels & Lubricants': 0, 'Crude Materials (Inedible)': 0, 'Beverages & Tobacco': 0, 'Food & Live Animals': 0, '__TOTAL__': 0}
+ value range: min=2.3 max=1056.4
+ GRAIN Year x Category dup keys=0
+
+=== monetary survey
+                 rows    y0    y1  yrs
+Basis                                 
+1964-1992 basis   319  1964  1992   29
+1993-2021 basis   348  1993  2021   29
+ duplicate keys Year x Basis x Item: 0
+ 1964-1992 basis: null cells=0, missing yrs=[]
+ 1993-2021 basis: null cells=0, missing yrs=[]
+ old basis: max|liab-total|=0.00, max|assets-total|=0.00
+ new basis: max|Domestic+Foreign-M2|=0.00 (assets identity check incl. other items)
+
+=== reserves
+ years 1993..2021 distinct=29, rows=522, dup keys=0
+ null cells per item: {'Import coverage (months)': 6}
+ assets identity max|sum-total|=0.00
+ liabilities identity max|sum-total|=0.00
+ gross reserves identity max|(assets-liab)-reported|=808.90
+
+=== WB merchandise vs CBJ geographic totals (converted at WB official FX, 'LCU per USD')
+ overlap years 1964..2022 n=59
+ export ratio WB/CBJ: min=1.085 median=1.229 max=1.712
+ import ratio WB/CBJ: min=0.977 median=1.000 max=1.027
+      CBJ_exp_JDk     FX    WB_exp_USD  exp_ratio_WB_over_CBJ  imp_ratio_WB_over_CBJ
+Year                                                                                
+1985     255346.0  0.395  7.890000e+08                  1.219                  1.004
+1995    1004534.0  0.700  1.769000e+09                  1.233                  1.000
+2005    2570222.0  0.709  4.302000e+09                  1.187                  1.000
+2010    4216949.0  0.710  7.028000e+09                  1.183                  1.000
+2015    4797583.0  0.710  7.833000e+09                  1.159                  1.000
+2019    4995685.0  0.710  8.317000e+09                  1.182                  1.000
+2021    6038824.0  0.710  9.358000e+09                  1.100                  1.000
+ cross-table total exports_geo vs exports_function: overlap=59 yrs, exact-match yrs=58, max diff=72, rel max=0.0012
+ cross-table total exports_geo vs exports_commodity: overlap=59 yrs, exact-match yrs=59, max diff=0, rel max=0.0000
+ cross-table total imports_geo vs imports_function: overlap=59 yrs, exact-match yrs=58, max diff=3857, rel max=0.0066
+ cross-table total imports_geo vs imports_commodity: overlap=58 yrs, exact-match yrs=57, max diff=3857, rel max=0.0066
+
+EXCLUDED SOURCE ROWS:
+  ('imports_by_commodity_according_to_s.i.t.c..xlsx', 68, 2011, 'duplicate year label; values identical to first occurrence (row 67) - excluded, next year missing in source')
+  ('3__monetary__survey_of_the_banking_system.xlsx', 71, 1998, "pre-reclassification 1998 row superseded by restated row 72 '(7)1998' (note 7: public sector accounts reclassified); differences e.g. M2 6003.3 vs 6026.3")

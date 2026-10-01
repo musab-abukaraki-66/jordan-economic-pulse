@@ -1,0 +1,28 @@
+relationship Eco_Year
+	fromColumn: FactEconomy.Year
+	toColumn: DimYear.Year
+
+relationship Comm_Year
+	fromColumn: FactTradeCommodity.Year
+	toColumn: DimYear.Year
+
+relationship Comm_Flow
+	fromColumn: FactTradeCommodity.FlowKey
+	toColumn: DimFlow.FlowKey
+
+relationship Comm_Commodity
+	fromColumn: FactTradeCommodity.CommodityKey
+	toColumn: DimCommodity.CommodityKey
+
+relationship Part_Year
+	fromColumn: FactTradePartner.Year
+	toColumn: DimYear.Year
+
+relationship Part_Flow
+	fromColumn: FactTradePartner.FlowKey
+	toColumn: DimFlow.FlowKey
+
+relationship Part_Partner
+	fromColumn: FactTradePartner.PartnerKey
+	toColumn: DimPartner.PartnerKey
+

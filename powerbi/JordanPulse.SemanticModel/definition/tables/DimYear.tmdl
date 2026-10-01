@@ -1,0 +1,38 @@
+/// One row per calendar year 1990-2025. Annual model; 2025 is provisional for World Bank series.
+table DimYear
+	lineageTag: afd89ad8-c797-4d46-9c9d-61cb1b276a30
+
+	column Year
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 40f8ef9d-87ed-49cd-a149-2fc26dc7d2ab
+		summarizeBy: none
+		sourceColumn: Year
+
+	column Decade
+		dataType: string
+		lineageTag: 8d012608-d92d-445b-a3ca-776ed9212972
+		summarizeBy: none
+		sourceColumn: Decade
+
+	column IsProvisional
+		dataType: boolean
+		lineageTag: 431a890f-8e62-4433-ae24-83733bfd854e
+		summarizeBy: none
+		sourceColumn: IsProvisional
+
+	partition DimYear = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents(DataFolder & "DimYear.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"Year", Int64.Type}, {"Decade", type text}, {"IsProvisional", type logical}}, "en-US")
+				in
+				  Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

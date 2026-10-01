@@ -1,0 +1,43 @@
+/// Grain: Year x Flow x Partner group. Source: CBJ geographic distribution of DOMESTIC exports and of imports. Unit: JD thousand.
+table FactTradePartner
+	lineageTag: 78e6bace-e8e4-4b54-84dc-415fc3a7eddc
+
+	column Year
+		dataType: int64
+		isHidden
+		lineageTag: b560f928-2931-4b5e-b24d-7ffee831dd4f
+		summarizeBy: none
+		sourceColumn: Year
+
+	column FlowKey
+		dataType: int64
+		isHidden
+		lineageTag: b94c92e1-298f-41e0-88ee-8bed3e42a71f
+		summarizeBy: none
+		sourceColumn: FlowKey
+
+	column PartnerKey
+		dataType: int64
+		isHidden
+		lineageTag: 7568ee6d-4866-41f3-9c5a-9fcbe4194d23
+		summarizeBy: none
+		sourceColumn: PartnerKey
+
+	/// JD thousand. Additive across partners and years.
+	column ValueJDk
+		dataType: double
+		isHidden
+		lineageTag: 09a7de33-4180-4724-ba4b-066f1b2aedcb
+		summarizeBy: none
+		sourceColumn: ValueJDk
+
+	partition FactTradePartner = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents(DataFolder & "FactTradePartner.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"Year", Int64.Type}, {"FlowKey", Int64.Type}, {"PartnerKey", Int64.Type}, {"ValueJDk", type number}}, "en-US")
+				in
+				  Typed
+

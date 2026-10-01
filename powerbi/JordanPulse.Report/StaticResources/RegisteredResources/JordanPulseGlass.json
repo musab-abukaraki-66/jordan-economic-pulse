@@ -1,0 +1,197 @@
+{
+  "name": "Jordan Pulse Glass",
+  "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.143.json",
+  "dataColors": [
+    "#0F5C63",
+    "#6E86A0",
+    "#B7862E",
+    "#5E9EA3",
+    "#A8B7C8",
+    "#D3B575",
+    "#3F7C82",
+    "#8AA0B8"
+  ],
+  "foreground": "#16222E",
+  "foregroundNeutralSecondary": "#5F6E7C",
+  "foregroundNeutralTertiary": "#8A97A3",
+  "foregroundLight": "#FFFFFF",
+  "background": "#FFFFFF",
+  "backgroundLight": "#F5F8F9",
+  "backgroundNeutral": "#D4DDE3",
+  "secondaryBackground": "#F5F8F9",
+  "tableAccent": "#0F5C63",
+  "good": "#0F5C63",
+  "neutral": "#6E86A0",
+  "bad": "#B7862E",
+  "maximum": "#0F5C63",
+  "center": "#A8B7C8",
+  "minimum": "#EAF0F2",
+  "null": "#8A97A3",
+  "hyperlink": "#0F5C63",
+  "visitedHyperlink": "#6E86A0",
+  "textClasses": {
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 28,
+      "color": "#16222E"
+    },
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#16222E"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 10,
+      "color": "#16222E"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 9,
+      "color": "#5F6E7C"
+    },
+    "largeTitle": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 18,
+      "color": "#16222E"
+    },
+    "largeLabel": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#5F6E7C"
+    },
+    "semiboldLabel": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 9,
+      "color": "#16222E"
+    },
+    "smallLabel": {
+      "fontFace": "Segoe UI",
+      "fontSize": 8,
+      "color": "#8A97A3"
+    },
+    "lightLabel": {
+      "fontFace": "Segoe UI",
+      "fontSize": 9,
+      "color": "#5F6E7C"
+    },
+    "boldLabel": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 9,
+      "color": "#16222E"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": false
+          }
+        ],
+        "border": [
+          {
+            "show": false
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": false
+          }
+        ],
+        "title": [
+          {
+            "show": false
+          }
+        ],
+        "subTitle": [
+          {
+            "show": false
+          }
+        ],
+        "categoryAxis": [
+          {
+            "fontFamily": "Segoe UI",
+            "fontSize": 9,
+            "labelColor": {
+              "solid": {
+                "color": "#5F6E7C"
+              }
+            },
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "fontFamily": "Segoe UI",
+            "fontSize": 9,
+            "labelColor": {
+              "solid": {
+                "color": "#5F6E7C"
+              }
+            },
+            "gridlineColor": {
+              "solid": {
+                "color": "#D4DDE3"
+              }
+            }
+          }
+        ],
+        "legend": [
+          {
+            "fontFamily": "Segoe UI",
+            "fontSize": 9,
+            "labelColor": {
+              "solid": {
+                "color": "#5F6E7C"
+              }
+            },
+            "showTitle": false
+          }
+        ],
+        "labels": [
+          {
+            "show": false
+          }
+        ],
+        "plotArea": [
+          {
+            "transparency": 100
+          }
+        ]
+      }
+    },
+    "lineChart": {
+      "*": {
+        "lineStyles": [
+          {
+            "strokeWidth": 2.25,
+            "showMarker": false,
+            "lineStyle": "solid",
+            "lineChartType": "linear"
+          }
+        ]
+      }
+    },
+    "areaChart": {
+      "*": {
+        "lineStyles": [
+          {
+            "strokeWidth": 2.25,
+            "lineChartType": "linear"
+          }
+        ]
+      }
+    },
+    "stackedAreaChart": {
+      "*": {
+        "lineStyles": [
+          {
+            "strokeWidth": 2.25,
+            "lineChartType": "linear"
+          }
+        ]
+      }
+    }
+  }
+}

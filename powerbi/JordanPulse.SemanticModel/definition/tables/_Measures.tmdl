@@ -1,0 +1,615 @@
+/// Measure container. No data.
+table _Measures
+	lineageTag: df8a51c2-2910-46c8-ae18-aca25f7737d8
+
+	/// Latest year for which the balance-of-payments series (remittances) is published. Used as the default headline year.
+	measure 'Latest Complete Year' = CALCULATE(MAX(FactEconomy[Year]), FILTER(ALL(FactEconomy), NOT ISBLANK(FactEconomy[Remittances_USD])))
+		formatString: 0
+		displayFolder: 00 Helpers
+		lineageTag: 0ccf5a4e-eb09-4cae-99a5-831f8b78ce08
+
+	/// Selected year (latest if several are selected); defaults to the latest complete year when no year is selected.
+	measure 'Reference Year' = IF(ISFILTERED(DimYear[Year]), MAX(DimYear[Year]), [Latest Complete Year])
+		formatString: 0
+		displayFolder: 00 Helpers
+		lineageTag: ef13940c-ea53-4377-b95a-5be444628520
+
+	/// Nominal GDP, current US$ (WB NY.GDP.MKTP.CD). Level: shows the latest year in context, never summed across years.
+	measure 'GDP (USD)' = CALCULATE(SUM(FactEconomy[GDP_USD]), LASTNONBLANK(DimYear[Year], CALCULATE(SUM(FactEconomy[GDP_USD]))))
+		formatString: """$""#,0.0,,,""bn"""
+		displayFolder: 01 Growth & Prices
+		lineageTag: a1190f84-45c4-450a-b45d-85c94a8cc214
+
+	/// Real GDP growth, annual % (WB NY.GDP.MKTP.KD.ZG). Rate: latest year in context.
+	measure 'GDP Growth (%)' = CALCULATE(SUM(FactEconomy[GDP_Growth_Pct]), LASTNONBLANK(DimYear[Year], CALCULATE(SUM(FactEconomy[GDP_Growth_Pct]))))
+		formatString: 0.0"%"
+		displayFolder: 01 Growth & Prices
+		lineageTag: feacc0d9-6992-4b75-90e6-388f08bc8ef3
+
+	/// GDP per capita, current US$ (WB NY.GDP.PCAP.CD).
+	measure 'GDP per Capita (USD)' = CALCULATE(SUM(FactEconomy[GDP_PerCapita_USD]), LASTNONBLANK(DimYear[Year], CALCULATE(SUM(FactEconomy[GDP_PerCapita_USD]))))
+		formatString: "$"#,0
+		displayFolder: 01 Growth & Prices
+		lineageTag: b49fd448-c99a-400d-ae4d-808a14a7de01
+
+	/// CPI inflation, annual % (WB FP.CPI.TOTL.ZG).
+	measure 'Inflation (%)' = CALCULATE(SUM(FactEconomy[Inflation_Pct]), LASTNONBLANK(DimYear[Year], CALCULATE(SUM(FactEconomy[Inflation_Pct]))))
+		formatString: 0.0"%"
+		displayFolder: 01 Growth & Prices
+		lineageTag: 5afe368c-88aa-4fd7-ac6e-aedbd046b1b2
+
+	/// Unemployment, % of labour force, ILO modelled estimate (WB SL.UEM.TOTL.ZS). Series starts 1991.
+	measure 'Unemployment (%)' = CALCULATE(SUM(FactEconomy[Unemployment_Pct]), LASTNONBLANK(DimYear[Year], CALCULATE(SUM(FactEconomy[Unemployment_Pct]))))
+		formatString: 0.0"%"
+		displayFolder: 01 Growth & Prices
+		lineageTag: 42bca1da-dcd8-4400-be01-c36b9390e723
+
+	/// Total population (WB SP.POP.TOTL). Snapshot.
+	measure Population = CALCULATE(SUM(FactEconomy[Population]), LASTNONBLANK(DimYear[Year], CALCULATE(SUM(FactEconomy[Population]))))
+		formatString: #,0.0,,"m"
+		displayFolder: 01 Growth & Prices
+		lineageTag: 73a918b0-a7df-48e7-9cae-b80d23a43288
+
+	/// Year-on-year population change, % (derived from WB SP.POP.TOTL). Defined for a single year in context.
+	measure 'Population Growth (%)' =
+			VAR yr = MAX(DimYear[Year])
+			VAR cur = CALCULATE(SUM(FactEconomy[Population]), DimYear[Year] = yr)
+			VAR prev = CALCULATE(SUM(FactEconomy[Population]), DimYear[Year] = yr - 1)
+			RETURN IF(cur > 0 && prev > 0, (DIVIDE(cur, prev) - 1) * 100)
+		formatString: 0.0"%"
+		displayFolder: 01 Growth & Prices
+		lineageTag: 69b3139e-2df3-4eb7-a57a-dc1e425eba81
+
+	/// Real GDP growth minus population growth, in percentage points: a rough read on whether output is outpacing population. Derived.
+	measure 'Growth Gap vs Population (pp)' = IF(NOT ISBLANK([GDP Growth (%)]) && NOT ISBLANK([Population Growth (%)]), [GDP Growth (%)] - [Population Growth (%)])
+		formatString: +0.0" pp";-0.0" pp"
+		displayFolder: 01 Growth & Prices
+		lineageTag: 562f3627-19cd-46a7-b6e4-8c883b7ec51b
+
+	/// TOTAL merchandise exports incl. re-exports, current US$ (WB TX.VAL.MRCH.CD.WT). Additive flow. Not the same as CBJ domestic exports.
+	measure 'Merch Exports (USD)' = SUM(FactEconomy[MerchExports_USD])
+		formatString: """$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: d54d8863-a584-4b2a-8f24-a8d64b081c7a
+
+	/// Merchandise imports, current US$ (WB TM.VAL.MRCH.CD.WT). Additive flow.
+	measure 'Merch Imports (USD)' = SUM(FactEconomy[MerchImports_USD])
+		formatString: """$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: 6ec7cf28-392e-4e22-bce0-a138c9477ce7
+
+	/// Merchandise trade balance = total merchandise exports - merchandise imports (WB). Negative = deficit. Not a current-account measure.
+	measure 'Merch Trade Balance (USD)' = IF(NOT ISBLANK([Merch Exports (USD)]) && NOT ISBLANK([Merch Imports (USD)]), [Merch Exports (USD)] - [Merch Imports (USD)])
+		formatString: """$""#,0.0,,,""bn"";-""$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: 081c6aa2-60a8-4485-9f32-3a5a21701b56
+
+	/// Merchandise trade balance as % of GDP. Computed per year; for several years, the simple mean of annual ratios.
+	measure 'Merch Trade Balance (% GDP)' = AVERAGEX(VALUES(DimYear[Year]), DIVIDE([Merch Trade Balance (USD)], [GDP (USD)]) * 100)
+		formatString: 0.0"%"
+		displayFolder: 02 External Position
+		lineageTag: 251af8ec-810c-49a7-a634-5208d19c8ccb
+
+	/// Total merchandise exports / merchandise imports (WB). Per year; for several years, the mean of annual ratios.
+	measure 'Export Coverage of Imports (%)' = AVERAGEX(VALUES(DimYear[Year]), DIVIDE([Merch Exports (USD)], [Merch Imports (USD)]) * 100)
+		formatString: 0.0"%"
+		displayFolder: 02 External Position
+		lineageTag: 69f6a2ce-32e2-4c77-8a06-c2ea85b46102
+
+	/// Balance of payments net trade in goods and services (WB BN.GSR.GNFS.CD). Includes services; differs from the merchandise balance.
+	measure 'Net Goods & Services (USD)' = SUM(FactEconomy[NetGoodsServices_USD])
+		formatString: """$""#,0.0,,,""bn"";-""$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: 90e2336d-62b2-4dfc-a2ea-db8006eed0bb
+
+	/// Current account balance (WB BN.CAB.XOKA.CD). Includes goods, services, income and transfers.
+	measure 'Current Account (USD)' = SUM(FactEconomy[CurrentAccount_USD])
+		formatString: """$""#,0.0,,,""bn"";-""$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: 571459d5-cd67-40ce-94c4-9c2bd46d6d9a
+
+	/// Current account balance, % of GDP (WB BN.CAB.XOKA.GD.ZS). Rate: latest year in context.
+	measure 'Current Account (% GDP)' = CALCULATE(SUM(FactEconomy[CurrentAccount_PctGDP]), LASTNONBLANK(DimYear[Year], CALCULATE(SUM(FactEconomy[CurrentAccount_PctGDP]))))
+		formatString: 0.0"%"
+		displayFolder: 02 External Position
+		lineageTag: 3527cedd-5b1a-4645-b493-6d1172733a6e
+
+	/// Personal remittances received (WB BX.TRF.PWKR.CD.DT). Inflow shown for context, not as a funding identity.
+	measure 'Remittances (USD)' = SUM(FactEconomy[Remittances_USD])
+		formatString: """$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: 4055c57a-7d11-4497-94a4-4028b37cdaa3
+
+	/// Foreign direct investment, net inflows, BoP (WB BX.KLT.DINV.CD.WD). Can be negative.
+	measure 'FDI Net Inflows (USD)' = SUM(FactEconomy[FDI_USD])
+		formatString: """$""#,0.0,,,""bn"";-""$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: 1dd58255-c047-4882-adca-42e0f79dacf1
+
+	/// Remittances / GDP. Annual ratio; mean of annual ratios if several years.
+	measure 'Remittances (% GDP)' = AVERAGEX(VALUES(DimYear[Year]), DIVIDE([Remittances (USD)], [GDP (USD)]) * 100)
+		formatString: 0.0"%"
+		displayFolder: 02 External Position
+		lineageTag: 009ef16d-f3ec-4f97-aacd-631a0325f627
+
+	/// FDI net inflows / GDP. Annual ratio; mean of annual ratios if several years.
+	measure 'FDI (% GDP)' = AVERAGEX(VALUES(DimYear[Year]), DIVIDE([FDI Net Inflows (USD)], [GDP (USD)]) * 100)
+		formatString: 0.0"%"
+		displayFolder: 02 External Position
+		lineageTag: d051acd6-97f0-4635-9529-051e7b18d0e6
+
+	/// CONTEXT RATIO, not an accounting identity: (remittances + FDI) as % of the merchandise deficit. Blank when the merchandise balance is not a deficit.
+	measure 'Remittances + FDI (% of Merch Deficit)' = AVERAGEX(VALUES(DimYear[Year]), VAR tb = [Merch Trade Balance (USD)] VAR fin = [Remittances (USD)] + [FDI Net Inflows (USD)] RETURN IF(tb < 0 && NOT ISBLANK(fin), DIVIDE(fin, -tb) * 100))
+		formatString: 0"%"
+		displayFolder: 02 External Position
+		lineageTag: 95a5b134-6f44-4992-bfe3-7cb4f0a13c7a
+
+	/// Total reserves incl. gold, current US$ (WB FI.RES.TOTL.CD). End-year snapshot; latest year in context.
+	measure 'Reserves (USD)' = CALCULATE(SUM(FactEconomy[Reserves_USD]), LASTNONBLANK(DimYear[Year], CALCULATE(SUM(FactEconomy[Reserves_USD]))))
+		formatString: """$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: d24dbdbe-a374-47cb-89a4-1707b928306c
+
+	/// Year-on-year change in WB total reserves. Includes valuation effects (e.g. gold); context only, not a measure of the deficit being 'funded'. Single year in context.
+	measure 'Reserves Change (USD)' =
+			VAR yr = MAX(DimYear[Year])
+			VAR cur = CALCULATE(SUM(FactEconomy[Reserves_USD]), DimYear[Year] = yr)
+			VAR prev = CALCULATE(SUM(FactEconomy[Reserves_USD]), DimYear[Year] = yr - 1)
+			RETURN IF(cur > 0 && prev > 0, cur - prev)
+		formatString: """$""#,0.0,,,""bn"";-""$""#,0.0,,,""bn"""
+		displayFolder: 02 External Position
+		lineageTag: 183dc92a-3621-4836-ae69-82ad80d3c914
+
+	/// DERIVED: WB total reserves / WB merchandise imports x 12. Not a published CBJ figure.
+	measure 'Import Coverage (months)' = AVERAGEX(VALUES(DimYear[Year]), DIVIDE([Reserves (USD)], [Merch Imports (USD)]) * 12)
+		formatString: 0.0
+		displayFolder: 02 External Position
+		lineageTag: d72f568d-8e42-473b-986a-59f1137f566f
+
+	/// CBJ trade value by commodity group, JD million (source: JD thousand / 1000). Flow is set by the Flow slicer/visual. Exports are DOMESTIC exports.
+	measure 'Commodity Value (JD m)' = SUM(FactTradeCommodity[ValueJDk]) / 1000
+		formatString: #,0
+		displayFolder: 03 Trade Structure (CBJ)
+		lineageTag: 4b3f1484-9158-47bd-9344-b4397019985d
+
+	/// Commodity group value as % of the selected flow's total in the same year(s). Requires a single flow in context.
+	measure 'Commodity Share of Flow (%)' = DIVIDE([Commodity Value (JD m)], CALCULATE([Commodity Value (JD m)], REMOVEFILTERS(DimCommodity))) * 100
+		formatString: 0.0"%"
+		displayFolder: 03 Trade Structure (CBJ)
+		lineageTag: c5c62151-b7e5-4f12-ad93-1c07e0956420
+
+	/// CBJ trade value by partner group, JD million. Flow is set by the Flow slicer/visual. Exports are DOMESTIC exports.
+	measure 'Partner Value (JD m)' = SUM(FactTradePartner[ValueJDk]) / 1000
+		formatString: #,0
+		displayFolder: 03 Trade Structure (CBJ)
+		lineageTag: f3ff2814-6f85-4fbd-86a9-25ae7ab1adb2
+
+	/// Partner group value as % of the selected flow's total in the same year(s). Requires a single flow in context.
+	measure 'Partner Share of Flow (%)' = DIVIDE([Partner Value (JD m)], CALCULATE([Partner Value (JD m)], REMOVEFILTERS(DimPartner))) * 100
+		formatString: 0.0"%"
+		displayFolder: 03 Trade Structure (CBJ)
+		lineageTag: 56c95402-7ff2-4d60-8487-ac3fc9174651
+
+	/// Total imports per CBJ geographic table, JD million (complete for 1990-2022 including 2012).
+	measure 'CBJ Imports (JD m)' = CALCULATE(SUM(FactTradePartner[ValueJDk]), DimFlow[Flow] = "Imports") / 1000
+		formatString: #,0
+		displayFolder: 03 Trade Structure (CBJ)
+		lineageTag: 64b6ebc9-3879-4e99-914d-05596adfea99
+
+	/// DOMESTIC exports per CBJ geographic table, JD million. Excludes re-exports; not comparable to WB total merchandise exports.
+	measure 'CBJ Domestic Exports (JD m)' = CALCULATE(SUM(FactTradePartner[ValueJDk]), DimFlow[Flow] = "Domestic exports") / 1000
+		formatString: #,0
+		displayFolder: 03 Trade Structure (CBJ)
+		lineageTag: 430d6ede-6707-47ef-ae3b-e005f8b9ece1
+
+	/// CBJ domestic exports / CBJ imports. Uses domestic exports only, so it is lower than the WB total-export coverage.
+	measure 'Domestic Export Coverage (CBJ, %)' = AVERAGEX(VALUES(DimYear[Year]), DIVIDE([CBJ Domestic Exports (JD m)], [CBJ Imports (JD m)]) * 100)
+		formatString: 0.0"%"
+		displayFolder: 03 Trade Structure (CBJ)
+		lineageTag: f0465562-4126-4efd-8220-ee4fa7483a94
+
+	/// Mineral fuels & lubricants as % of CBJ imports by commodity. Blank for 2012 (source row invalid).
+	measure 'Fuel Share of Imports (%)' =
+			VAR imp = CALCULATE([Commodity Value (JD m)], DimFlow[Flow] = "Imports")
+			VAR fuel = CALCULATE([Commodity Value (JD m)], DimFlow[Flow] = "Imports", DimCommodity[Commodity] = "Mineral Fuels & Lubricants")
+			RETURN DIVIDE(fuel, imp) * 100
+		formatString: 0.0"%"
+		displayFolder: 03 Trade Structure (CBJ)
+		lineageTag: c57dfaaf-04a6-4672-a931-9f89a81b9e06
+
+	/// Positive real GDP growth only. Splits one series so negative years can be coloured amber in a stacked column.
+	measure 'GDP Growth (+)' = VAR g = [GDP Growth (%)] RETURN IF(NOT ISBLANK(g) && g >= 0, g)
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: 29e91a07-461f-4153-8118-3d8c795d7317
+
+	/// Negative real GDP growth only (contraction years).
+	measure 'GDP Growth (-)' = VAR g = [GDP Growth (%)] RETURN IF(NOT ISBLANK(g) && g < 0, g)
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: 2d35596b-eb96-4a2c-a203-83a730725856
+
+	/// KPI caption: merchandise deficit as % of GDP.
+	measure 'Cap Deficit' = VAR ry = [Reference Year] VAR v = CALCULATE([Merch Trade Balance (% GDP)], DimYear[Year] = ry) RETURN IF(ISBLANK(v), "–", FORMAT(ABS(v), "0.0") & "% of GDP")
+		displayFolder: 05 Captions
+		lineageTag: a48f8736-29bd-4125-933c-1e7ff5c68056
+
+	/// KPI caption for export coverage.
+	measure 'Cap Coverage' = "Total exports ÷ imports"
+		displayFolder: 05 Captions
+		lineageTag: 8aa49f62-87d1-4c39-9f7c-48eea38645f5
+
+	/// KPI caption: current account as % of GDP.
+	measure 'Cap Current Account' = VAR ry = [Reference Year] VAR v = CALCULATE([Current Account (% GDP)], DimYear[Year] = ry) RETURN IF(ISBLANK(v), "Not yet published", FORMAT(v, "0.0") & "% of GDP")
+		displayFolder: 05 Captions
+		lineageTag: 7581d844-f37e-4134-b2c5-657c39225406
+
+	/// KPI caption: derived import coverage in months.
+	measure 'Cap Reserves' = VAR ry = [Reference Year] VAR v = CALCULATE([Import Coverage (months)], DimYear[Year] = ry) RETURN IF(ISBLANK(v), "–", FORMAT(v, "0.0") & " months of imports")
+		displayFolder: 05 Captions
+		lineageTag: 6b67931b-6e47-4475-9536-04c049082a9e
+
+	/// Caption under the GDP growth chart.
+	measure 'Cap Growth' = VAR ry = [Reference Year] VAR v = CALCULATE([GDP Growth (%)], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": " & IF(ISBLANK(v), "–", FORMAT(v, "+0.0;-0.0") & "% real GDP growth")
+		displayFolder: 05 Captions
+		lineageTag: 1e254d97-356c-4726-b399-b0f72e429b5e
+
+	/// Caption under the inflation and unemployment chart.
+	measure 'Cap Prices Jobs' = VAR ry = [Reference Year] VAR i = CALCULATE([Inflation (%)], DimYear[Year] = ry) VAR u = CALCULATE([Unemployment (%)], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": inflation " & IF(ISBLANK(i), "–", FORMAT(i, "0.0") & "%") & " · unemployment " & IF(ISBLANK(u), "–", FORMAT(u, "0.0") & "%")
+		displayFolder: 05 Captions
+		lineageTag: a976e3ed-05ae-4104-abb4-6fab5911eb68
+
+	/// Caption under the reserves chart.
+	measure 'Cap Reserves Line' = VAR ry = [Reference Year] VAR r = CALCULATE([Reserves (USD)], DimYear[Year] = ry) VAR m = CALCULATE([Import Coverage (months)], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": " & IF(ISBLANK(r), "–", FORMAT(r / 1e9, "$0.0") & "bn") & " · " & IF(ISBLANK(m), "–", FORMAT(m, "0.0")) & " months of imports"
+		displayFolder: 05 Captions
+		lineageTag: f7d35df7-dfb4-4524-995e-58171a446039
+
+	/// Caption under the Inflows in context chart.
+	measure 'Cap Remittances FDI' = VAR ry = [Reference Year] VAR r = CALCULATE([Remittances (USD)], DimYear[Year] = ry) VAR f = CALCULATE([FDI Net Inflows (USD)], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": remittances " & IF(ISBLANK(r), "–", FORMAT(r / 1e9, "$0.0") & "bn") & " · FDI " & IF(ISBLANK(f), "–", FORMAT(f / 1e9, "$0.0") & "bn")
+		displayFolder: 05 Captions
+		lineageTag: bfde24d1-60c1-4feb-92fa-c746bdd6d46d
+
+	/// Merchandise trade balance pinned to the Reference Year (selected year, else latest complete year).
+	measure 'KPI Trade Balance' = VAR ry = [Reference Year] RETURN CALCULATE([Merch Trade Balance (USD)], DimYear[Year] = ry) / 1e9
+		formatString: """$""#,0.0""bn"";-""$""#,0.0""bn"""
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 255c858e-c846-4c16-a908-4089fce7ced9
+
+	/// Export coverage of imports pinned to the Reference Year.
+	measure 'KPI Export Coverage' = VAR ry = [Reference Year] RETURN CALCULATE([Export Coverage of Imports (%)], DimYear[Year] = ry)
+		formatString: 0.0"%"
+		displayFolder: 06 KPI (reference year)
+		lineageTag: dc5d4302-d7ff-4a10-b9f3-b6cefc0b26cc
+
+	/// Current account balance pinned to the Reference Year.
+	measure 'KPI Current Account' = VAR ry = [Reference Year] RETURN CALCULATE([Current Account (USD)], DimYear[Year] = ry) / 1e9
+		formatString: """$""#,0.0""bn"";-""$""#,0.0""bn"""
+		displayFolder: 06 KPI (reference year)
+		lineageTag: fbec8f34-f596-497f-983f-169a2c4cd5da
+
+	/// Reserves pinned to the Reference Year.
+	measure 'KPI Reserves' = VAR ry = [Reference Year] RETURN CALCULATE([Reserves (USD)], DimYear[Year] = ry) / 1e9
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 2d80f7b7-8eec-43d8-8eba-6ea6fb23cb83
+
+	/// Chart helper: WB total merchandise exports in US$ bn. Blank for the provisional year so charts end at the last complete year.
+	measure 'Exports ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Merch Exports (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: 3629f539-8ac8-432d-8c47-86ee1cf3865e
+
+	/// Chart helper: WB merchandise imports in US$ bn (provisional year blank).
+	measure 'Imports ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Merch Imports (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: a28ca1de-f2ee-4bf9-b6cc-584cdb966ef0
+
+	/// Chart helper: personal remittances received, US$ bn (provisional year blank).
+	measure 'Remittances ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Remittances (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: a15db1b0-a1a8-4ac5-84b4-8c53998b4cca
+
+	/// Chart helper: FDI net inflows, US$ bn (provisional year blank).
+	measure 'FDI ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [FDI Net Inflows (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"";-""$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: 1969587e-2220-4d92-be76-6210fac51e47
+
+	/// Chart helper: WB total reserves incl. gold, US$ bn (provisional year blank).
+	measure 'Reserves ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Reserves (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: 5a54276a-0bcc-480c-b38f-19e94ca74c07
+
+	/// Chart helper: merchandise trade balance, US$ bn (provisional year blank).
+	measure 'Trade balance ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Merch Trade Balance (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"";-""$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: 5f4999cf-7d99-49dc-9352-7a38fbe0767d
+
+	/// Chart helper: current account balance, US$ bn (provisional year blank).
+	measure 'Current account ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Current Account (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"";-""$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: 5b9bc159-a716-464d-8c9a-c71d7f2122c5
+
+	/// Chart helper: CPI inflation (provisional year blank).
+	measure 'Inflation, %' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Inflation (%)])
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: 63f72ad5-60ba-472c-b64d-f81ce1692211
+
+	/// Chart helper: unemployment rate (provisional year blank).
+	measure 'Unemployment, %' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Unemployment (%)])
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: 1d51b264-2722-4545-b19c-ee8dc5201a8d
+
+	/// Chart helper: positive real GDP growth (provisional year blank).
+	measure 'Growth, +' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [GDP Growth (+)])
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: a622df06-cba3-4364-bacf-a1ad520fcd19
+
+	/// Chart helper: negative real GDP growth (provisional year blank).
+	measure 'Growth, -' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [GDP Growth (-)])
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: 2f352575-0976-4b94-867f-e39345384d01
+
+	/// Chart helper: merchandise gap = WB merchandise imports - total merchandise exports, US$ bn. Used to draw the shaded band between the two lines (provisional year blank).
+	measure 'Gap ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), ([Merch Imports (USD)] - [Merch Exports (USD)]) / 1e9)
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: 966c9644-3066-4b8f-9000-0f52b4a998db
+
+	/// Nominal GDP (US$ bn) pinned to the Reference Year.
+	measure 'KPI GDP' = VAR ry = [Reference Year] RETURN CALCULATE([GDP (USD)], DimYear[Year] = ry) / 1e9
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 8f87ac53-4bdc-455f-8a94-6cb45cf30344
+
+	/// Real GDP growth pinned to the Reference Year.
+	measure 'KPI GDP Growth' = VAR ry = [Reference Year] RETURN CALCULATE([GDP Growth (%)], DimYear[Year] = ry)
+		formatString: +0.0"%";-0.0"%"
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 38c96197-e67a-4940-9801-0efeb184f9a4
+
+	/// CPI inflation pinned to the Reference Year.
+	measure 'KPI Inflation' = VAR ry = [Reference Year] RETURN CALCULATE([Inflation (%)], DimYear[Year] = ry)
+		formatString: 0.0"%"
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 201dca43-b23a-48bb-b32d-f5718e8c5946
+
+	/// Unemployment pinned to the Reference Year.
+	measure 'KPI Unemployment' = VAR ry = [Reference Year] RETURN CALCULATE([Unemployment (%)], DimYear[Year] = ry)
+		formatString: 0.0"%"
+		displayFolder: 06 KPI (reference year)
+		lineageTag: db326d31-b221-4712-a648-d400961de023
+
+	/// Remittances (US$ bn) pinned to the Reference Year.
+	measure 'KPI Remittances' = VAR ry = [Reference Year] RETURN CALCULATE([Remittances (USD)], DimYear[Year] = ry) / 1e9
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 653489c4-a3da-4dc4-aaf5-e758801b43a3
+
+	/// FDI net inflows (US$ bn) pinned to the Reference Year.
+	measure 'KPI FDI' = VAR ry = [Reference Year] RETURN CALCULATE([FDI Net Inflows (USD)], DimYear[Year] = ry) / 1e9
+		formatString: """$""#,0.0""bn"";-""$""#,0.0""bn"""
+		displayFolder: 06 KPI (reference year)
+		lineageTag: f7d47c7b-fb52-4e7e-88b9-151447eaa1c9
+
+	/// Derived import coverage in months pinned to the Reference Year.
+	measure 'KPI Import Coverage' = VAR ry = [Reference Year] RETURN CALCULATE([Import Coverage (months)], DimYear[Year] = ry)
+		formatString: 0.0
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 7698ac9f-79e2-44a8-b08c-9f0022f47da1
+
+	/// Chart helper: population growth (provisional year blank).
+	measure 'Pop Growth, %' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Population Growth (%)])
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: aa65ac23-9bf6-4d48-a983-ec4caf21b2b9
+
+	/// Chart helper: real GDP growth (provisional year blank).
+	measure 'GDP, growth, %' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [GDP Growth (%)])
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: c15ee325-54e0-42b1-a1e2-ad5ceaa71a6f
+
+	/// Chart helper: GDP per capita, current US$ (provisional year blank).
+	measure 'GDP per capita ($)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [GDP per Capita (USD)])
+		formatString: "$"#,0
+		displayFolder: 04 Chart helpers
+		lineageTag: 265533b6-5a0a-4a59-a1cf-12b9ef8258d0
+
+	/// Chart helper: population in millions (provisional year blank).
+	measure 'Population (m)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Population] / 1e6)
+		formatString: 0.0"m"
+		displayFolder: 04 Chart helpers
+		lineageTag: 961564f6-4925-41ff-b9ca-1b270670df08
+
+	/// Chart helper: BoP net goods and services, US$ bn (provisional year blank).
+	measure 'Net goods & services ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Net Goods & Services (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"";-""$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: 1a901773-c759-4f93-8176-a4c703fc8710
+
+	/// Chart helper: derived import coverage in months (provisional year blank).
+	measure 'Import coverage, months' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Import Coverage (months)])
+		formatString: 0.0
+		displayFolder: 04 Chart helpers
+		lineageTag: 97fa84da-d715-45f7-a1df-2cbf78d8f36e
+
+	/// Chart helper: remittances as % of GDP (provisional year blank).
+	measure 'Remittances, % GDP' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Remittances (% GDP)])
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: 26eaf046-cc3b-401a-a03c-1b3d445d9b0e
+
+	/// Chart helper: FDI net inflows as % of GDP (provisional year blank).
+	measure 'FDI, % GDP' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [FDI (% GDP)])
+		formatString: 0.0"%";-0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: 6e81cf7a-339e-4e8b-bd06-2b8ad115e5fe
+
+	/// Chart helper: year-on-year change in WB total reserves (includes valuation effects), US$ bn.
+	measure 'Reserves change ($bn)' = IF(SELECTEDVALUE(DimYear[IsProvisional], FALSE()), BLANK(), [Reserves Change (USD)] / 1e9)
+		formatString: """$""#,0.0""bn"";-""$""#,0.0""bn"""
+		displayFolder: 04 Chart helpers
+		lineageTag: ad7935c1-ac70-4469-afda-6974bf8152e1
+
+	/// Caption under GDP KPI.
+	measure 'Cap GDP' = VAR ry = [Reference Year] VAR v = CALCULATE([GDP per Capita (USD)], DimYear[Year] = ry) RETURN IF(ISBLANK(v), "–", FORMAT(v, "$#,0") & " per person")
+		displayFolder: 05 Captions
+		lineageTag: 6228a5a2-9089-4349-9d97-9959be4672da
+
+	/// Caption under growth KPI: population growth.
+	measure 'Cap GDP Growth' = VAR ry = [Reference Year] VAR v = CALCULATE([Population Growth (%)], DimYear[Year] = ry) RETURN IF(ISBLANK(v), "–", "Population " & FORMAT(v, "+0.0;-0.0") & "%")
+		displayFolder: 05 Captions
+		lineageTag: 4e4b0e2a-f2ee-4f8c-9b0a-36f5e17c7cb9
+
+	measure 'Cap Inflation' = "Consumer prices, annual"
+		displayFolder: 05 Captions
+		lineageTag: e7b15b60-6794-447c-b77b-d947ea428e21
+
+	measure 'Cap Unemployment' = "% of labour force, ILO modelled"
+		displayFolder: 05 Captions
+		lineageTag: 804439cc-c5d2-418f-b56e-e7a414d66d3a
+
+	measure 'Cap Remittances' = VAR ry = [Reference Year] VAR v = CALCULATE([Remittances (% GDP)], DimYear[Year] = ry) RETURN IF(ISBLANK(v), "Not yet published", FORMAT(v, "0.0") & "% of GDP")
+		displayFolder: 05 Captions
+		lineageTag: f57960ab-cb3c-4955-aa85-09e312f31ffe
+
+	measure 'Cap FDI' = VAR ry = [Reference Year] VAR v = CALCULATE([FDI (% GDP)], DimYear[Year] = ry) RETURN IF(ISBLANK(v), "Not yet published", FORMAT(v, "0.0") & "% of GDP")
+		displayFolder: 05 Captions
+		lineageTag: 252e0520-41c5-4800-872b-99ac2f8304cc
+
+	measure 'Cap Import Coverage' = "Reserves ÷ imports × 12 (derived)"
+		displayFolder: 05 Captions
+		lineageTag: c72be77c-9386-433e-b551-547668b35124
+
+	/// Caption under growth vs population growth.
+	measure 'Cap GDP Growth Chart' = VAR ry = [Reference Year] VAR g = CALCULATE([GDP Growth (%)], DimYear[Year] = ry) VAR p = CALCULATE([Population Growth (%)], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": real GDP " & IF(ISBLANK(g), "–", FORMAT(g, "+0.0;-0.0") & "%") & " vs population " & IF(ISBLANK(p), "–", FORMAT(p, "+0.0;-0.0") & "%")
+		displayFolder: 05 Captions
+		lineageTag: 5c61eaad-7b9e-430d-bcd1-08afcefa1426
+
+	measure 'Cap Per Capita' = VAR ry = [Reference Year] VAR v = CALCULATE([GDP per Capita (USD)], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": " & IF(ISBLANK(v), "–", FORMAT(v, "$#,0"))
+		displayFolder: 05 Captions
+		lineageTag: a1593141-0b54-4a7e-8271-46681e71bf6a
+
+	measure 'Cap Population' = VAR ry = [Reference Year] VAR v = CALCULATE([Population], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": " & IF(ISBLANK(v), "–", FORMAT(v / 1e6, "0.0") & "m people")
+		displayFolder: 05 Captions
+		lineageTag: 1d98f90c-433c-493a-8720-2da292fe5f75
+
+	/// Caption under external-position hero.
+	measure 'Cap Gap Line' = VAR ry = [Reference Year] VAR tb = CALCULATE([Merch Trade Balance (USD)], DimYear[Year] = ry) VAR ng = CALCULATE([Net Goods & Services (USD)], DimYear[Year] = ry) VAR ca = CALCULATE([Current Account (USD)], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": merchandise " & IF(ISBLANK(tb), "–", FORMAT(tb / 1e9, "$0.0;-$0.0") & "bn") & " · goods & services " & IF(ISBLANK(ng), "–", FORMAT(ng / 1e9, "$0.0;-$0.0") & "bn") & " · current account " & IF(ISBLANK(ca), "–", FORMAT(ca / 1e9, "$0.0;-$0.0") & "bn")
+		displayFolder: 05 Captions
+		lineageTag: 09d9cb75-178f-4e2d-a8c1-3ac414e57f94
+
+	measure 'Cap Reserve Change' = VAR ry = [Reference Year] VAR v = CALCULATE([Reserves Change (USD)], DimYear[Year] = ry) RETURN FORMAT(ry, "0") & ": " & IF(ISBLANK(v), "–", FORMAT(v / 1e9, "+$0.0;-$0.0") & "bn") & " (incl. valuation effects)"
+		displayFolder: 05 Captions
+		lineageTag: cbe1190e-63d1-4fdd-892f-08001e809247
+
+	/// Year shown on the Trade Structure page: the Reference Year capped at the last year in the CBJ bulletin tables (2022).
+	measure 'CBJ Year' = MIN([Reference Year], CALCULATE(MAX(FactTradePartner[Year]), ALL(FactTradePartner)))
+		formatString: 0
+		displayFolder: 00 Helpers
+		lineageTag: 9031307e-6d33-4a0c-8b0e-e01e458a7ae3
+
+	/// CBJ imports (JD bn), pinned to the CBJ Year. Source unit JD thousand.
+	measure 'KPI CBJ Imports' = VAR cy = [CBJ Year] RETURN CALCULATE([CBJ Imports (JD m)], DimYear[Year] = cy) / 1000
+		formatString: """JD ""#,0.0""bn"""
+		displayFolder: 07 KPI (CBJ year)
+		lineageTag: 67041902-9cc9-48e0-997c-7ba23a5d86aa
+
+	/// CBJ DOMESTIC exports (JD bn), pinned to the CBJ Year. Excludes re-exports.
+	measure 'KPI CBJ Domestic Exports' = VAR cy = [CBJ Year] RETURN CALCULATE([CBJ Domestic Exports (JD m)], DimYear[Year] = cy) / 1000
+		formatString: """JD ""#,0.0""bn"""
+		displayFolder: 07 KPI (CBJ year)
+		lineageTag: 756ed9b3-7d48-4b25-a4f4-879ce3495ea6
+
+	/// CBJ domestic exports / CBJ imports, pinned to the CBJ Year.
+	measure 'KPI CBJ Coverage' = VAR cy = [CBJ Year] RETURN CALCULATE([Domestic Export Coverage (CBJ, %)], DimYear[Year] = cy)
+		formatString: 0.0"%"
+		displayFolder: 07 KPI (CBJ year)
+		lineageTag: a5e0bdd6-68ff-4e66-ab45-d9a7dc19b224
+
+	/// Mineral fuels share of CBJ imports, pinned to the CBJ Year.
+	measure 'KPI CBJ Fuel Share' = VAR cy = [CBJ Year] RETURN CALCULATE([Fuel Share of Imports (%)], DimYear[Year] = cy)
+		formatString: 0.0"%"
+		displayFolder: 07 KPI (CBJ year)
+		lineageTag: 81927ee1-0ab6-49aa-b3e0-9332ec9d1c12
+
+	/// Commodity group share of the flow in the visual (set by a visual filter), pinned to the CBJ Year.
+	measure 'Commodity Share (CBJ year)' = VAR cy = [CBJ Year] RETURN CALCULATE([Commodity Share of Flow (%)], DimYear[Year] = cy)
+		formatString: 0.0"%"
+		displayFolder: 07 KPI (CBJ year)
+		lineageTag: 7a25d815-9e91-40c1-8326-40c6bd4ad18f
+
+	/// Partner group share of the flow in the visual (set by a visual filter), pinned to the CBJ Year.
+	measure 'Partner Share (CBJ year)' = VAR cy = [CBJ Year] RETURN CALCULATE([Partner Share of Flow (%)], DimYear[Year] = cy)
+		formatString: 0.0"%"
+		displayFolder: 07 KPI (CBJ year)
+		lineageTag: 5343c3e9-e9fe-4b3a-bbf3-ff21978e4417
+
+	/// Chart helper: CBJ domestic export coverage of imports by year (blank after the last CBJ year).
+	measure 'Coverage, % (CBJ)' = [Domestic Export Coverage (CBJ, %)]
+		formatString: 0.0"%"
+		displayFolder: 04 Chart helpers
+		lineageTag: 8308803a-8e23-4e6c-900a-7d1899db5fe3
+
+	/// Note explaining which year the CBJ page shows.
+	measure 'Cap CBJ Year' = VAR cy = [CBJ Year] VAR ry = [Reference Year] RETURN "Showing " & FORMAT(cy, "0") & IF(cy < ry, " — the latest year in the CBJ bulletin tables (reference year " & FORMAT(ry, "0") & " is not covered)", "") & ". Values in JD; exports are domestic exports."
+		displayFolder: 05 Captions
+		lineageTag: 95b65b72-82c0-4c51-ba1b-bcb9ea12a14d
+
+	measure 'Cap CBJ Imports' = "CBJ, " & FORMAT([CBJ Year], "0")
+		displayFolder: 05 Captions
+		lineageTag: 369a5c72-edb4-4e5d-a030-b7cd99008dc5
+
+	measure 'Cap CBJ Domestic Exports' = "Excludes re-exports"
+		displayFolder: 05 Captions
+		lineageTag: 8266dcc0-b943-4992-bdbb-5afe87791a91
+
+	measure 'Cap CBJ Coverage' = "Domestic exports ÷ imports"
+		displayFolder: 05 Captions
+		lineageTag: da7d99d9-5345-4481-9fdc-0193266ee377
+
+	measure 'Cap CBJ Fuel' = "Mineral fuels, share of imports"
+		displayFolder: 05 Captions
+		lineageTag: be4a4dc7-1ccd-44fe-8f6a-e4dfec932a67
+
+	/// Total merchandise exports (US$ bn) pinned to the Reference Year (the hovered year in tooltips).
+	measure 'KPI Exports' = VAR ry = [Reference Year] RETURN CALCULATE([Merch Exports (USD)], DimYear[Year] = ry) / 1e9
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 8f4f8b99-2908-4a4d-b40f-ba088478c47d
+
+	/// Merchandise imports (US$ bn) pinned to the Reference Year.
+	measure 'KPI Imports' = VAR ry = [Reference Year] RETURN CALCULATE([Merch Imports (USD)], DimYear[Year] = ry) / 1e9
+		formatString: """$""#,0.0""bn"""
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 12ca370e-8ea1-45c5-9a9d-b3f9613c5a6c
+
+	/// Text label of the Reference Year for tooltip titles.
+	measure 'KPI Year Label' = FORMAT([Reference Year], "0")
+		displayFolder: 06 KPI (reference year)
+		lineageTag: 046e2508-0553-4218-8548-6c560bda04e8
+
+	/// Dynamic callout on the Executive hero: the merchandise gap for the reference year.
+	measure 'Cap Gap Callout' = VAR ry = [Reference Year] VAR g = CALCULATE([Merch Trade Balance (USD)], DimYear[Year] = ry) VAR p = CALCULATE([Merch Trade Balance (% GDP)], DimYear[Year] = ry) RETURN IF(ISBLANK(g), "", "Gap in " & FORMAT(ry, "0") & ": " & FORMAT(ABS(g) / 1e9, "$0.0") & "bn  ·  " & FORMAT(ABS(p), "0.0") & "% of GDP")
+		displayFolder: 05 Captions
+		lineageTag: 7d5d58f6-d05f-47bd-881e-03a23c1c4a84
+
+	column Placeholder
+		lineageTag: a06f2386-ead7-4824-908a-3c61e299ff02
+		isNameInferred
+		sourceColumn: [Placeholder]
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW("Placeholder", 1)
+

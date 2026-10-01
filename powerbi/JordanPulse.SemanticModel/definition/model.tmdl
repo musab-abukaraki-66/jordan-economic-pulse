@@ -1,0 +1,21 @@
+model JordanPulse
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode"]
+
+annotation PBI_QueryOrder = ["DimYear","DimFlow","DimCommodity","DimPartner","FactEconomy","FactTradeCommodity","FactTradePartner","DataFolder"]
+
+ref table DimYear
+ref table DimFlow
+ref table DimCommodity
+ref table DimPartner
+ref table FactEconomy
+ref table FactTradeCommodity
+ref table FactTradePartner
+ref table _Measures
+

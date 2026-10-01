@@ -1,0 +1,36 @@
+/// CBJ partner groups. 8 mutually exclusive groups that sum to the CBJ grand total.
+table DimPartner
+	lineageTag: 7fda245d-3b0a-42a8-8669-6a3aa0a45b90
+
+	column PartnerKey
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 93972b28-eef3-484f-9d1b-5ac747822fb7
+		summarizeBy: none
+		sourceColumn: PartnerKey
+
+	column Partner
+		dataType: string
+		lineageTag: 5c0d27b7-584b-4bdd-a524-a65fb9b9ca8b
+		summarizeBy: none
+		sourceColumn: Partner
+		sortByColumn: SortOrder
+
+	column SortOrder
+		dataType: int64
+		isHidden
+		lineageTag: a60cc6e9-77a9-48f8-90ae-d64bddf41464
+		summarizeBy: none
+		sourceColumn: SortOrder
+
+	partition DimPartner = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents(DataFolder & "DimPartner.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"PartnerKey", Int64.Type}, {"Partner", type text}, {"SortOrder", Int64.Type}}, "en-US")
+				in
+				  Typed
+

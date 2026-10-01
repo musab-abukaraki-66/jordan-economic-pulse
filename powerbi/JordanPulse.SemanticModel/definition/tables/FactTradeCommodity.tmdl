@@ -1,0 +1,43 @@
+/// Grain: Year x Flow x Commodity group. Source: CBJ Annual Statistical Bulletin (imports by commodity; DOMESTIC exports by commodity). Unit: JD thousand. 2012 imports missing in source.
+table FactTradeCommodity
+	lineageTag: 8de37835-4730-4d46-939b-94bbffc38ec7
+
+	column Year
+		dataType: int64
+		isHidden
+		lineageTag: 9732c912-cd20-44b1-b645-a9b837ab20fc
+		summarizeBy: none
+		sourceColumn: Year
+
+	column FlowKey
+		dataType: int64
+		isHidden
+		lineageTag: b58341dd-5c4c-4173-824c-1b95b8db2618
+		summarizeBy: none
+		sourceColumn: FlowKey
+
+	column CommodityKey
+		dataType: int64
+		isHidden
+		lineageTag: 8ecf3024-a82b-4450-adb4-67d99fbaef71
+		summarizeBy: none
+		sourceColumn: CommodityKey
+
+	/// JD thousand. Additive across categories and years.
+	column ValueJDk
+		dataType: double
+		isHidden
+		lineageTag: bda0e660-0bba-4ec9-969f-e1a081f3d13e
+		summarizeBy: none
+		sourceColumn: ValueJDk
+
+	partition FactTradeCommodity = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents(DataFolder & "FactTradeCommodity.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"Year", Int64.Type}, {"FlowKey", Int64.Type}, {"CommodityKey", Int64.Type}, {"ValueJDk", type number}}, "en-US")
+				in
+				  Typed
+

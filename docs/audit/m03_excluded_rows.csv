@@ -1,0 +1,3 @@
+File,SrcRow,Year,Reason
+imports_by_commodity_according_to_s.i.t.c..xlsx,68,2011,"duplicate year label; values identical to first occurrence (row 67) - excluded, next year missing in source"
+3__monetary__survey_of_the_banking_system.xlsx,71,1998,pre-reclassification 1998 row superseded by restated row 72 '(7)1998' (note 7: public sector accounts reclassified); differences e.g. M2 6003.3 vs 6026.3

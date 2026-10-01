@@ -1,0 +1,39 @@
+ID,KPI,Year,Value,Unit,Definition
+B01,GDP,2024,58618380563.3803,USD,WB NY.GDP.MKTP.CD
+B02,Real GDP growth,2024,2.55605891810194,%,WB NY.GDP.MKTP.KD.ZG
+B03,GDP per capita,2024,5073.92103605892,USD,WB NY.GDP.PCAP.CD
+B04,CPI inflation,2024,1.55659611283953,%,WB FP.CPI.TOTL.ZG
+B05,Unemployment,2024,16.693,%,WB SL.UEM.TOTL.ZS (ILO modelled)
+B06,Population,2024,11552876.0,persons,WB SP.POP.TOTL
+B07,Population growth,2024,0.9936260475261749,%,pop(t)/pop(t-1)-1
+B08,Merchandise exports (total),2024,13534000000.0,USD,WB TX.VAL.MRCH.CD.WT (incl. re-exports)
+B09,Merchandise imports,2024,26895000000.0,USD,WB TM.VAL.MRCH.CD.WT
+B10,Merchandise trade balance,2024,-13361000000.0,USD,exports - imports
+B11,Trade balance % GDP,2024,-22.793191950353535,%,balance / GDP
+B12,Export coverage of imports,2024,50.32162111916713,%,exports / imports
+B13,Net goods & services (BoP),2024,-7712253521.12677,USD,WB BN.GSR.GNFS.CD
+B14,Current account,2024,-3126507042.25352,USD,WB BN.CAB.XOKA.CD
+B15,Current account % GDP,2024,-5.33366328480029,%,WB BN.CAB.XOKA.GD.ZS
+B16,Remittances received,2024,4431126760.56337,USD,WB BX.TRF.PWKR.CD.DT
+B17,FDI net inflows,2024,1634647887.32394,USD,WB BX.KLT.DINV.CD.WD
+B18,Total reserves incl. gold,2024,21939099361.5116,USD,WB FI.RES.TOTL.CD
+B19,Import coverage (months),2024,9.78877829849932,months,reserves / merch imports * 12 (derived)
+B20,Remittances + FDI as % of merchandise deficit,2024,45.39910671272592,%,"context ratio, NOT an identity"
+B21,Reserve change,2024,2870197670.885502,USD,reserves(t)-reserves(t-1); includes valuation effects
+B22,Avg real GDP growth 2010-2024,2010-2024,2.3919442252179546,%,simple mean of annual growth
+B23,Cumulative remittances 2015-2024,2015-2024,46645352112.675995,USD,sum
+B24,Avg trade deficit % GDP 1990-2024,1990-2024,-31.300963054859267,%,simple mean of annual ratios
+B25,Peak unemployment 1991-2025,1991-2025,21.439,%,max
+B26,Merchandise trade balance 2025 (provisional),2025,-14032000000.0,USD,WB 2025
+C01,CBJ imports total (sum of commodity groups),2022,19428480.5,JD thousand,sum of 10 SITC groups
+C02,CBJ domestic exports total (sum of commodity groups),2022,8365530.0,JD thousand,sum of 10 SITC groups
+C03,Fuel share of imports,2022,18.40377995592604,%,Mineral fuels / total imports
+C04,Food share of imports,2022,18.83276152244639,%,Food & live animals / total imports
+C05,Arab share of domestic exports,2022,32.76198721362605,%,Arab / sum of partner groups
+C06,EU share of imports,2022,16.30274389438886,%,EU / sum of partner groups
+C07,Domestic export coverage of imports (CBJ),2022,43.05807651813017,%,domestic exports / imports
+C08,Chemicals share of domestic exports,2022,27.928104973623906,%,Chemicals / total domestic exports
+C09,China share of imports,2022,15.230195814073166,%,China / sum of partner groups
+C10,Fuel share of imports 2000,2000,15.610553340426655,%,Mineral fuels / total imports
+C11,Imports total 2012 via partner table,2012,14733750.0,JD thousand,commodity 2012 unavailable (source copy error)
+C12,CBJ imports total 2010,2010,11050126.0,JD thousand,sum

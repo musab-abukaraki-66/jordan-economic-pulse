@@ -1,0 +1,6 @@
+/// Folder holding the curated CSVs (data/curated in this repository). SET THIS to the absolute path of that folder on your machine, ending with a backslash, then Refresh.
+expression DataFolder = "C:\path\to\jordan-economic-pulse\data\curated\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 1eff26c5-3f19-4758-bd42-1b9e7754cc4c
+
+	annotation PBI_ResultType = Text
+

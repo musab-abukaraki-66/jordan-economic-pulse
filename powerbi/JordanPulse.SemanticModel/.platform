@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "JordanPulse"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4c9e7a13-52b8-4d0f-8a66-1e3b9c5d2f70"
+  }
+}
